@@ -18,13 +18,13 @@ def extract_size_str(msg):
     size_found = re.search('dataverse: (.+?) bytes', msg).group(1)
     # remove those ',' delimiters and optionally '.' as well,
     # depending on locale (there is no fractional byte!).
-    # Delimiter are probably there to improve readability of those large numbers,
+    # Delimiters are probably there to improve readability of those large numbers,
     # but calculating with it is problematic.
     clean_size_str = size_found.translate({ord(i): None for i in ',.'})
     return clean_size_str
 
 
-# Traverses the tree and collect sizes for ech dataverse using recursion.
+# Traverses the tree and collects sizes for each dataverse using recursion.
 # Note that storing the parents size if all children sizes are also stored is redundant.
 def get_children_sizes(args, dataverse_client: DataverseClient, parent_data, max_depth, depth=1):
     parent_alias = parent_data['alias']
@@ -41,7 +41,7 @@ def get_children_sizes(args, dataverse_client: DataverseClient, parent_data, max
             child_result_list.append(row)
             logging.info(f'size: {storage_size}')
             if depth < max_depth:
-                child_result_list.extend(get_children_sizes(args, dataverse_client, i, depth + 1))  # recurse
+                child_result_list.extend(get_children_sizes(args, dataverse_client, i, max_depth, depth +1))  # recurse
     return child_result_list
 
 
@@ -62,11 +62,10 @@ def write_output(args, result_list):
             rich.print_json(data=result_list)
     else:
         if args.format == 'csv':
-            csv_filename = args.output_file
-            with open(csv_filename, 'w') as f:
+            with open(args.output_file, 'w') as f:
                 write_storage_usage_to_csv(f, result_list)
         else:
-            with open("name_of_file.json", "w") as f:
+            with open(args.output_file, "w") as f:
                 f.write(json.dumps(result_list, indent=4))
 
 
@@ -80,7 +79,7 @@ def collect_storage_usage(args, dataverse_client: DataverseClient):
     logging.info(f'Extracted the tree for the toplevel dataverse: {name} ({alias})')
 
     if args.include_grand_total:
-        logging.info("Retrieving total size for this dataverse instance...")
+        logging.info("Retrieving the total size for this dataverse instance...")
         msg = dataverse_client.dataverse(alias).get_storage_size()
         storage_size = extract_size_str(msg)
         row = {'depth': 0, 'parentalias': alias, 'alias': alias, 'name': name,
@@ -106,9 +105,6 @@ def main():
 
     add_dry_run_arg(parser)
     args = parser.parse_args()
-
-    # Maybe validate if the given file can be opened, so it fails early if not?
-    # might be nice to add timestamp or maybe a counter to the filename if it already exists
 
     dataverse_client = DataverseClient(config['dataverse'])
     collect_storage_usage(args, dataverse_client)

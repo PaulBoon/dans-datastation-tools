@@ -1,4 +1,5 @@
 import json
+import time
 
 import requests
 
@@ -207,3 +208,30 @@ class DatasetApi:
             r = requests.post(url, headers=headers, params=params)
         r.raise_for_status()
         return r.json()
+
+    def get_files(self, version=':latest', dry_run=False):
+        url = f'{self.server_url}/api/datasets/:persistentId/versions/{version}/files'
+        params = {'persistentId': self.pid}
+        headers = {'X-Dataverse-key': self.api_token}
+        if dry_run:
+            print_dry_run_message(method='GET', url=url, headers=headers, params=params)
+            return None
+        else:
+            r = requests.get(url, headers=headers, params=params)
+        r.raise_for_status()
+        return r.json()['data']
+
+    def await_unlock(self, lock_type=None, sleep_time=5, max_tries=10):
+        """Wait for a lock to be removed from the dataset."""
+        tries = 0
+        while tries < max_tries:
+            locks = self.get_locks(lock_type=lock_type)
+            if len(locks) == 0:
+                return
+            tries += 1
+            time.sleep(sleep_time)
+        if lock_type is None:
+            message = f'Locks not removed after {max_tries} tries.'
+        else:
+            message = f'Locks {lock_type} not removed after {max_tries} tries.'
+        raise RuntimeError(message)

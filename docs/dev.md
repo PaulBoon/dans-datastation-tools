@@ -147,6 +147,23 @@ Most commands talk to a remote service, e.g. a Dataverse server. The code that t
 dedicated subpackage, e.g. `dataverse` for the Dataverse server. There is also a `common` subpackage that common
 functionality for all commands and utilities that are not specific to a remote service.
 
+### Configuration
+
+There is one configuration file which is in YAML format and contains a section for each targeted service. The objects
+that need a specific section take a dictionary with only that section as a parameter, e.g.:
+
+```python
+from datastation.dataverse.dataverse_client import DataverseClient
+from datastation.common.config import init
+
+config = init()
+dataverse_client = DataverseClient(config['dataverse'])
+```
+
+Note that DataverseClient does not know about the other sections in the configuration file. On the other hand it does
+not receive each individual parameter as a separate argument either. This is to avoid having to transfer all the
+parameters to the constructor of the client. This style is intended to strike a balance between the two extremes.
+
 ### Code style
 
 #### Code formatting
@@ -167,6 +184,5 @@ name = "John"
 f"Hello {name}"
 ```
 
-Do not use the old `%` syntax, or the `.format()` method or string concatenation.
-
-
+Do not use the old `%` syntax, or the `.format()` method or string concatenation. Also avoid concatenating strings with
+`+` or `+=`. Use string interpolation instead.

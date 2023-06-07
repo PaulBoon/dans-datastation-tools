@@ -1,6 +1,7 @@
 import json as jsonlib
 import os
 import shutil
+import argparse
 
 
 def add_dry_run_arg(parser):
@@ -16,6 +17,17 @@ def add_batch_proccessor_args(parser, report: bool = True):
     if report:
         parser.add_argument('-r', '--report-file', default='-', help="the report file, or - for stdout",
                             dest='report_file')
+
+def positive_int_argument_converter(value):
+    try:
+        ivalue = int(value)
+
+        if ivalue <= 0:
+            raise argparse.ArgumentTypeError("value must be a number greater than zero")
+
+        return ivalue
+    except ValueError:
+        raise argparse.ArgumentTypeError("value must be a number greater than zero")
 
 
 def print_dry_run_message(method, url, params=None, headers=None, data=None, json=None):

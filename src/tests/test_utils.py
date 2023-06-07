@@ -1,6 +1,8 @@
 import os
+import argparse
+import unittest
 
-from datastation.common.utils import is_sub_path_of, has_dirtree_pred, set_permissions
+from datastation.common.utils import is_sub_path_of, has_dirtree_pred, set_permissions, positive_int_argument_converter
 
 
 class TestIsSubPathOf:
@@ -90,3 +92,14 @@ class TestSetPermissions:
                 assert oct(os.stat(os.path.join(root, d)).st_mode)[-3:] == '777'
             for f in files:
                 assert oct(os.stat(os.path.join(root, f)).st_mode)[-3:] == '666'
+
+class TestPositiveIntArgumentConverter(unittest.TestCase):
+    def test_positive_int_argument_converter(self):
+        self.assertEqual(positive_int_argument_converter("5"), 5)
+        self.assertEqual(positive_int_argument_converter("100"), 100)
+        with self.assertRaises(argparse.ArgumentTypeError):
+            positive_int_argument_converter("0")
+        with self.assertRaises(argparse.ArgumentTypeError):
+            positive_int_argument_converter("-5")
+        with self.assertRaises(argparse.ArgumentTypeError):
+            positive_int_argument_converter("abc")

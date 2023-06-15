@@ -28,6 +28,7 @@ class JsonResultWriter(ResultWriter):
         else:
             self.out_stream.write(", ")
         self.out_stream.write(json.dumps(result))
+        self.out_stream.flush()
 
     def close(self):
         if not self.first_result_written:

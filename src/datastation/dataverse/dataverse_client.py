@@ -4,6 +4,7 @@ from datastation.dataverse.builtin_users import BuiltInUsersApi
 from datastation.dataverse.file_api import FileApi
 from datastation.dataverse.dataset_api import DatasetApi
 from datastation.dataverse.dataverse_api import DataverseApi
+from datastation.dataverse.dataverse_api import DataverseApi
 from datastation.dataverse.metrics_api import MetricsApi
 
 
@@ -23,6 +24,9 @@ class DataverseClient:
     def dataset(self, pid):
         return DatasetApi(pid, self.server_url, self.api_token, self.unblock_key, self.safety_latch)
 
+    def dataverse(self):
+        return DataverseApi(self.server_url, self.api_token)
+
     def file(self, id):
         return FileApi(id, self.server_url, self.api_token, self.unblock_key, self.safety_latch)
 
@@ -34,6 +38,3 @@ class DataverseClient:
 
     def metrics(self):
         return MetricsApi(self.server_url)
-
-    def dataverse(self, alias):
-        return DataverseApi(alias, self.server_url, self.api_token, self.unblock_key, self.safety_latch)

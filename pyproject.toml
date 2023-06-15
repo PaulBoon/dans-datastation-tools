@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dans-datastation-tools"
-version = "0.26.0"
+version = "0.28.0"
 description = "Command line utilities for Data Station application management"
 authors = ["DANS-KNAW"]
 packages = [
@@ -32,6 +32,7 @@ dv-banner = "datastation.dv_banner:main"
 dv-dataset-delete-draft = "datastation.dv_dataset_delete_draft:main"
 dv-dataset-destroy = "datastation.dv_dataset_destroy:main"
 dv-dataset-destroy-migration-placeholder = "datastation.dv_dataset_destroy_migration_placeholder:main"
+dv-dataset-get-attributes="datastation.dv_dataset_get_attributes:main"
 dv-dataset-find-by-role-assignment = "datastation.dv_dataset_find_by_role_assignment:main"
 dv-dataset-get-metadata = "datastation.dv_dataset_get_metadata:main"
 dv-dataset-get-metadata-export = "datastation.dv_dataset_get_metadata_export:main"

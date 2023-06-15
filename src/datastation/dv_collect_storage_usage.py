@@ -34,7 +34,7 @@ def get_children_sizes(args, dataverse_client: DataverseClient, parent_data, max
         for i in parent_data['children']:
             child_alias = i['alias']
             logging.info(f'Retrieving size for dataverse: {parent_alias} / {child_alias} ...')
-            msg = dataverse_client.dataverse(child_alias).get_storage_size()
+            msg = dataverse_client.dataverse().get_storage_size(child_alias)
             storage_size = extract_size_str(msg)
             row = {'depth': depth, 'parentalias': parent_alias, 'alias': child_alias, 'name': i['name'],
                    'storagesize': storage_size}
@@ -80,7 +80,7 @@ def collect_storage_usage(args, dataverse_client: DataverseClient):
 
     if args.include_grand_total:
         logging.info("Retrieving the total size for this dataverse instance...")
-        msg = dataverse_client.dataverse(alias).get_storage_size()
+        msg = dataverse_client.dataverse().get_storage_size(alias)
         storage_size = extract_size_str(msg)
         row = {'depth': 0, 'parentalias': alias, 'alias': alias, 'name': name,
                'storagesize': storage_size}

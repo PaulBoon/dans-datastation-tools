@@ -17,6 +17,21 @@ class DatasetApi:
 
     def get_pid(self):
         return self.pid
+    
+    def get(self, version=":latest", dry_run=False):
+        url = f'{self.server_url}/api/datasets/:persistentId/versions/{version}'
+        headers = {'X-Dataverse-key': self.api_token}
+        params = {'persistentId': self.pid}
+        
+        if dry_run:
+            print_dry_run_message(method='GET', url=url, headers=headers, params=params)
+            return None
+        
+        dv_resp = requests.get(url, headers=headers, params=params)
+        dv_resp.raise_for_status()
+
+        resp_data = dv_resp.json()['data']
+        return resp_data
 
     def get_role_assignments(self, dry_run=False):
         url = f'{self.server_url}/api/datasets/:persistentId/assignments'

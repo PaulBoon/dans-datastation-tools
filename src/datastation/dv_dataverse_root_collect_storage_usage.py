@@ -31,17 +31,17 @@ def get_children_sizes(args, dataverse_client: DataverseClient, parent_data, max
     child_result_list = []
     # only direct descendants (children)
     if 'children' in parent_data:
-        for i in parent_data['children']:
-            child_alias = i['alias']
+        for child_data in parent_data['children']:
+            child_alias = child_data['alias']
             logging.info(f'Retrieving size for dataverse: {parent_alias} / {child_alias} ...')
             msg = dataverse_client.dataverse().get_storage_size(child_alias)
             storage_size = extract_size_str(msg)
-            row = {'depth': depth, 'parentalias': parent_alias, 'alias': child_alias, 'name': i['name'],
+            row = {'depth': depth, 'parentalias': parent_alias, 'alias': child_alias, 'name': child_data['name'],
                    'storagesize': storage_size}
             child_result_list.append(row)
             logging.info(f'size: {storage_size}')
             if depth < max_depth:
-                child_result_list.extend(get_children_sizes(args, dataverse_client, i, max_depth, depth +1))  # recurse
+                child_result_list.extend(get_children_sizes(args, dataverse_client, child_data, max_depth, depth +1))  # recurse
     return child_result_list
 
 
@@ -94,7 +94,7 @@ def main():
     config = init()
 
     parser = argparse.ArgumentParser(description='Collect the storage usage for the dataverses')
-    parser.add_argument('-m', '--max_depth', dest='max_depth', type=int, default=1,
+    parser.add_argument('-m', '--max-depth', dest='max_depth', type=int, default=1,
                         help='the max depth of the hierarchy to traverse')
     parser.add_argument('-g', '--include-grand-total', dest='include_grand_total', action='store_true',
                         help='whether to include the grand total, which almost doubles server processing time')

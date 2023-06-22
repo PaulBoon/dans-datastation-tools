@@ -1,3 +1,4 @@
+from datastation.common.result_writer import CsvResultWriter, YamlResultWriter, JsonResultWriter
 from datastation.dataverse.dataverse_client import DataverseClient
 import logging
 import re
@@ -50,27 +51,28 @@ class MetricsCollect:
                         self.get_children_sizes(child_data, max_depth, depth + 1))  # recurse
         return child_result_list
 
-    def write_storage_usage_to_csv(self, out, result_list):
-        csv_columns = ['depth', 'parentalias', 'alias', 'name', 'storagesize']
-        writer = csv.DictWriter(out, fieldnames=csv_columns, quoting=csv.QUOTE_ALL)
-        writer.writeheader()
-        for row in result_list:
-            writer.writerow(row)
 
-    def write_output(self, result_list):
+    def create_result_writer(self, out_stream):
         logging.info(f'Writing output: {self.output_file}, with format : {self.output_format}')
-        if self.output_file == '-':
-            if self.output_format == 'csv':
-                self.write_storage_usage_to_csv(sys.stdout, result_list)
-            else:
-                rich.print_json(data=result_list)
+        csv_columns = ['depth', 'parentalias', 'alias', 'name', 'storagesize']
+        if self.output_format == 'csv':
+            return CsvResultWriter(headers=csv_columns, out_stream=out_stream)
         else:
-            if self.output_format == 'csv':
-                with open(self.output_file, 'w') as f:
-                    self.write_storage_usage_to_csv(f, result_list)
-            else:
-                with open(self.output_file, "w") as f:
-                    f.write(json.dumps(result_list, indent=4))
+            return JsonResultWriter(out_stream)
+
+    def write_output_with_writer(self, result_list):
+        out_stream = sys.stdout
+        if self.output_file != '-':
+            out_stream = open(self.output_file, "w")
+        # what if opening fails?
+
+        # now create the writer
+        writer = self.create_result_writer(out_stream)
+        is_first = True
+        # but why can't the writer do the bookkeeping?
+        for row in result_list:
+            writer.write(row, is_first)
+            is_first = False
 
     def collect_storage_usage(self, max_depth=1, include_grand_total: bool = False):
         result_list = []
@@ -90,4 +92,5 @@ class MetricsCollect:
             result_list.append(row)
             logging.info(f'size: {storage_size}')
         result_list.extend(self.get_children_sizes(tree_data, max_depth, 1))
-        self.write_output(result_list)
+        #self.write_output(result_list)
+        self.write_output_with_writer(result_list)

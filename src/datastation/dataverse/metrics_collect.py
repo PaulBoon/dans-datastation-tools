@@ -29,28 +29,8 @@ class MetricsCollect:
         self.output_format = output_format
         self.dry_run = dry_run
 
-
-    # Traverses the tree and collects sizes for each dataverse using recursion.
-    # Note that storing the parents size if all children sizes are also stored is redundant.
-    def get_children_sizes(self, parent_data, max_depth, depth=1):
-        parent_alias = parent_data['alias']
-        child_result_list = []
-        # only direct descendants (children)
-        if 'children' in parent_data:
-            for child_data in parent_data['children']:
-                child_alias = child_data['alias']
-                logging.info(f'Retrieving size for dataverse: {parent_alias} / {child_alias} ...')
-                msg = self.dataverse_client.dataverse().get_storage_size(child_alias)
-                storage_size = extract_size_str(msg)
-                row = {'depth': depth, 'parentalias': parent_alias, 'alias': child_alias, 'name': child_data['name'],
-                       'storagesize': storage_size}
-                child_result_list.append(row)
-                logging.info(f'size: {storage_size}')
-                if depth < max_depth:
-                    child_result_list.extend(
-                        self.get_children_sizes(child_data, max_depth, depth + 1))  # recurse
-        return child_result_list
-
+        self.writer = None
+        self.is_first = True  # Would be nicer if the Writer does the bookkeeping
 
     def create_result_writer(self, out_stream):
         logging.info(f'Writing output: {self.output_file}, with format : {self.output_format}')
@@ -60,37 +40,54 @@ class MetricsCollect:
         else:
             return JsonResultWriter(out_stream)
 
-    def write_output_with_writer(self, result_list):
-        out_stream = sys.stdout
-        if self.output_file != '-':
-            out_stream = open(self.output_file, "w")
-        # what if opening fails?
+    def write_result_row(self, row):
+        self.writer.write(row, self.is_first)
+        self.is_first = False  # Only the first time it can be True
 
-        # now create the writer
-        writer = self.create_result_writer(out_stream)
-        is_first = True
-        # but why can't the writer do the bookkeeping?
-        for row in result_list:
-            writer.write(row, is_first)
-            is_first = False
+    def get_result_row(self, parent_alias, child_alias, child_name, depth):
+        logging.info(f'Retrieving size for dataverse: {parent_alias} / {child_alias} ...')
+        msg = self.dataverse_client.dataverse().get_storage_size(child_alias)
+        storage_size = extract_size_str(msg)
+        logging.info(f'size: {storage_size}')
+        row = {'depth': depth, 'parentalias': parent_alias, 'alias': child_alias, 'name': child_name,
+               'storagesize': storage_size}
+        return row
+
+    # Traverses the tree and collects sizes for each dataverse using recursion.
+    # Note that storing the parents size if all children sizes are also stored is redundant.
+    def collect_children_sizes(self, parent_data, max_depth, depth=1):
+        parent_alias = parent_data['alias']
+        # Only direct descendants (children)
+        if 'children' in parent_data:
+            for child_data in parent_data['children']:
+                row = self.get_result_row(parent_alias, child_data['alias'], child_data['name'], depth)
+                self.write_result_row(row)
+
+                if depth < max_depth:
+                    self.collect_children_sizes(child_data, max_depth, depth + 1)  # Recurse
 
     def collect_storage_usage(self, max_depth=1, include_grand_total: bool = False):
-        result_list = []
+        out_stream = sys.stdout
+        if self.output_file != '-':
+            try:
+                out_stream = open(self.output_file, "w")
+            except:
+                logging.error(f"Could not open file: {self.output_file}")
+                raise
+
+        self.writer = self.create_result_writer(out_stream)
+
         logging.info(f'Extracting tree for server: {self.dataverse_client.server_url} ...')
         tree_data = self.dataverse_client.metrics().get_tree()
-
         alias = tree_data['alias']
         name = tree_data['name']
         logging.info(f'Extracted the tree for the toplevel dataverse: {name} ({alias})')
 
         if include_grand_total:
             logging.info("Retrieving the total size for this dataverse instance...")
-            msg = self.dataverse_client.dataverse().get_storage_size(alias)
-            storage_size = extract_size_str(msg)
-            row = {'depth': 0, 'parentalias': alias, 'alias': alias, 'name': name,
-                   'storagesize': storage_size}
-            result_list.append(row)
-            logging.info(f'size: {storage_size}')
-        result_list.extend(self.get_children_sizes(tree_data, max_depth, 1))
-        #self.write_output(result_list)
-        self.write_output_with_writer(result_list)
+            row = self.get_result_row("-", alias, name, 0)  # The root has no parent
+            self.write_result_row(row)
+
+        self.collect_children_sizes(tree_data, max_depth, 1)
+        self.writer.close()
+        self.is_first = True

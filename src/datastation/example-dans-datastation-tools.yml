@@ -19,8 +19,9 @@ migration_placeholders:
 ingest_flow:
   service_baseurl: 'http://localhost:20300'
   deposits_mode:
-    directory: '0770'
-    file: '0660'
+    # N.B. these must be integers, not strings. Use octal notation.
+    directory: 0770
+    file: 0660
   deposits_group: deposits
   ingest_areas:
     import:

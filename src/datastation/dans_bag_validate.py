@@ -3,8 +3,8 @@ import sys
 
 from datastation.common.result_writer import CsvResultWriter, JsonResultWriter, YamlResultWriter
 from datastation.common.utils import add_dry_run_arg
-from src.datastation.common.config import init
-from src.datastation.dans_bag.validate_dans_bag import ValidateDansBag
+from datastation.common.config import init
+from datastation.dans_bag.validate_dans_bag import ValidateDansBag
 
 
 def create_result_writer(file_format):
@@ -30,7 +30,6 @@ def main():
                         help=f'Which information package type to validate this bag as (default: '
                              f'{default_information_package_type})',
                         choices=['DEPOSIT', 'MIGRATION'],
-                        required=True,
                         default=default_information_package_type)
     parser.add_argument('-f', '--format', dest='format',
                         help='Output format, one of: csv, json, yaml (default: json)')

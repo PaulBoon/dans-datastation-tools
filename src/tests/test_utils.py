@@ -93,6 +93,7 @@ class TestSetPermissions:
             for f in files:
                 assert oct(os.stat(os.path.join(root, f)).st_mode)[-3:] == '666'
 
+
 class TestPositiveIntArgumentConverter(unittest.TestCase):
     def test_positive_int_argument_converter(self):
         self.assertEqual(positive_int_argument_converter("5"), 5)

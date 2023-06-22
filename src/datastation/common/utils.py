@@ -18,6 +18,7 @@ def add_batch_proccessor_args(parser, report: bool = True):
         parser.add_argument('-r', '--report-file', default='-', help="the report file, or - for stdout",
                             dest='report_file')
 
+
 def positive_int_argument_converter(value):
     try:
         ivalue = int(value)
@@ -40,15 +41,16 @@ def print_dry_run_message(method, url, params=None, headers=None, data=None, jso
     print()
 
 
+def expand_path(path):
+    return os.path.abspath(os.path.expanduser(path))
+
+
 def is_sub_path_of(child, parent):
     """
     Returns True if child is a descendant directory of parent, or if child is a file in a descendant directory
-    of parent. Returns False otherwise. If one of the paths does not exist, returns False. The paths are first
-    converted to absolute paths."""
-    if not os.path.exists(child) or not os.path.exists(parent):
-        return False
-    absolute_parent = os.path.abspath(parent)
-    absolute_dir = os.path.abspath(child)
+    of parent. Returns False otherwise. The existence of child and parent is not checked."""
+    absolute_parent = expand_path(parent)
+    absolute_dir = expand_path(child)
     return absolute_dir.startswith(absolute_parent)
 
 
@@ -64,6 +66,14 @@ def has_dirtree_pred(path, pred):
         return pred(root) \
             and all(pred(os.path.join(root, d)) for d in dirs) \
             and all(pred(os.path.join(root, f)) for f in files)
+
+
+def have_subdirs_pred(path, pred):
+    """
+    Returns True if all subdirectories in the directory tree rooted at path satisfy the predicate pred.
+    """
+    for root, dirs, files in os.walk(path):
+        return all(pred(os.path.join(root, d)) for d in dirs)
 
 
 def set_permissions(path, dir_mode, file_mode, group):

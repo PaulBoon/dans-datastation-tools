@@ -2,7 +2,8 @@ import os
 import argparse
 import unittest
 
-from datastation.common.utils import is_sub_path_of, has_dirtree_pred, set_permissions, positive_int_argument_converter
+from datastation.common.utils import is_sub_path_of, has_dirtree_pred, set_permissions, positive_int_argument_converter, \
+    plural
 
 
 class TestIsSubPathOf:
@@ -104,3 +105,11 @@ class TestPositiveIntArgumentConverter(unittest.TestCase):
             positive_int_argument_converter("-5")
         with self.assertRaises(argparse.ArgumentTypeError):
             positive_int_argument_converter("abc")
+
+
+class TestPlural(unittest.TestCase):
+    def test_plural(self):
+        self.assertEqual(plural("pid"), "pids")
+        self.assertEqual(plural("alias"), "aliases")
+        self.assertEqual(plural(":-)lolly"), ":-)lollies")
+

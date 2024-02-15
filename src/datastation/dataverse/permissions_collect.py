@@ -43,7 +43,7 @@ class PermissionsCollect:
         return row
 
     def get_group_info(self, alias):
-        resp_data = self.dataverse_client.dataverse().get_groups(alias)
+        resp_data = self.dataverse_client.dataverse(alias).get_groups()
         # flatten and compact it... no list comprehension though
         result_list = []
         for group in resp_data:
@@ -52,7 +52,7 @@ class PermissionsCollect:
         return ', '.join(result_list)
 
     def get_role_info(self, alias):
-        resp_data = self.dataverse_client.dataverse().get_roles(alias)
+        resp_data = self.dataverse_client.dataverse(alias).get_roles()
         # flatten and compact it... no list comprehension though
         result_list = []
         for role in resp_data:
@@ -61,7 +61,7 @@ class PermissionsCollect:
         return ', '.join(result_list)
 
     def get_assignment_info(self, alias):
-        resp_data = self.dataverse_client.dataverse().get_assignments(alias)
+        resp_data = self.dataverse_client.dataverse(alias).get_role_assignments()
         # flatten and compact it... no list comprehension though
         result_list = []
         for assignment in resp_data:

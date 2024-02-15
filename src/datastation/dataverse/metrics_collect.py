@@ -46,7 +46,7 @@ class MetricsCollect:
 
     def get_result_row(self, parent_alias, child_alias, child_name, depth):
         logging.info(f'Retrieving size for dataverse: {parent_alias} / {child_alias} ...')
-        msg = self.dataverse_client.dataverse().get_storage_size(child_alias)
+        msg = self.dataverse_client.dataverse(child_alias).get_storage_size()
         storage_size = extract_size_str(msg)
         logging.info(f'size: {storage_size}')
         row = {'depth': depth, 'parentalias': parent_alias, 'alias': child_alias, 'name': child_name,

@@ -110,3 +110,11 @@ def sizeof_fmt(num, suffix='B'):
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
+
+def plural(word: str):
+    if word.endswith('s'):
+        return word + "es"
+    elif word.endswith('y'):
+        return word[:-1] + "ies"
+    else:
+        return word + "s"

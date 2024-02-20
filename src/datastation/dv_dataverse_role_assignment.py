@@ -8,36 +8,40 @@ from datastation.dataverse.roles import DataverseRole
 
 
 def list_role_assignments(args, dataverse_client: DataverseClient):
-    role_assignment = DataverseRole(dataverse_client)
-    role_assignment.list_role_assignments(args.alias)
+    DataverseRole(dataverse_client, args.dry_run).list_role_assignments(args.alias)
+
 
 def add_role_assignments(args, dataverse_client: DataverseClient):
     role_assignment = DataverseRole(dataverse_client, args.dry_run)
     aliases = get_aliases(args.alias_or_alias_file)
-    batch_processor = DataverseBatchProcessorWithReport(wait=args.wait, fail_on_first_error=args.fail_fast,
-                                                        report_file=args.report_file,
-                                                        headers=['alias', 'Modified', 'Assignee', 'Role', 'Change'])
-    batch_processor.process_aliases(aliases,
-                                    lambda alias,
-                                           csv_report: role_assignment.add_role_assignment(args.role_assignment,
-                                                                                dataverse_api=
-                                                                                dataverse_client.dataverse(
-                                                                                    alias),
-                                                                                csv_report=csv_report))
+    create_batch_processor(args).process_aliases(
+        aliases,
+        lambda alias,
+               csv_report: role_assignment.add_role_assignment(args.role_assignment,
+                                                               dataverse_api=dataverse_client.dataverse(alias),
+                                                               csv_report=csv_report)
+    )
 
 
 def remove_role_assignments(args, dataverse_client: DataverseClient):
     role_assignment = DataverseRole(dataverse_client, args.dry_run)
     aliases = get_aliases(args.alias_or_alias_file)
-    batch_processor = DataverseBatchProcessorWithReport(wait=args.wait, report_file=args.report_file,
-                                                        headers=['alias', 'Modified', 'Assignee', 'Role', 'Change'])
-    batch_processor.process_aliases(aliases,
-                                    lambda alias,
-                                           csv_report: role_assignment.remove_role_assignment(args.role_assignment,
-                                                                                   dataverse_api=
-                                                                                   dataverse_client.dataverse(
-                                                                                       alias),
-                                                                                   csv_report=csv_report))
+    create_batch_processor(args).process_aliases(
+        aliases,
+        lambda alias,
+               csv_report: role_assignment.remove_role_assignment(args.role_assignment,
+                                                                  dataverse_api=dataverse_client.dataverse(alias),
+                                                                  csv_report=csv_report)
+    )
+
+
+def create_batch_processor(args):
+    return DataverseBatchProcessorWithReport(
+        wait=args.wait,
+        fail_on_first_error=args.fail_fast,
+        report_file=args.report_file,
+        headers=['alias', 'Modified', 'Assignee', 'Role', 'Change']
+    )
 
 
 def main():

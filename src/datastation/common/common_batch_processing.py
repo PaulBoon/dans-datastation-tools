@@ -74,23 +74,15 @@ def get_pids(pid_or_pids_file, search_api=None, query="*", subtree="root", objec
         return get_provided_items_iterator(pid_or_pids_file, "pid")
 
 
-def get_aliases(alias_or_aliases_file, dry_run=False):
+def get_aliases(alias_or_aliases_file):
     """
 
     Args:
         alias_or_aliases_file: The dataverse alias, or a file with a list of aliases.
-        dry_run:          Do not perform the action, but show what would be done.
-                          Only applicable if pid_or_pids_file is None.
 
     Returns: an iterator with aliases
     """
-    if alias_or_aliases_file is None:
-        # The tree of all (published) dataverses could be retrieved and aliases could recursively be extracted
-        # from the tree, but this is not implemented yet.
-        logging.warning(f"No aliases provided, nothing to do.")
-        return None
-    else:
-        return get_provided_items_iterator(alias_or_aliases_file, "alias")
+    return get_provided_items_iterator(alias_or_aliases_file, "alias")
 
 
 class DatasetBatchProcessor(CommonBatchProcessor):

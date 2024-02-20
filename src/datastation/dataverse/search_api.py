@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from datastation.common.utils import print_dry_run_message
+from datastation.common.utils import print_dry_run_message, raise_for_status_after_log
 
 
 class SearchApi:
@@ -54,7 +54,7 @@ class SearchApi:
 
         while True:
             dv_resp = requests.get(self.url, headers=headers, params=params)
-            dv_resp.raise_for_status()
+            raise_for_status_after_log(dv_resp)
 
             data = dv_resp.json()["data"]
             items = data["items"]

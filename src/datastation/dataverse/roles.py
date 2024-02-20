@@ -1,7 +1,7 @@
-import rich
 from datetime import datetime
 
-from datastation.common.common_batch_processing import DataverseBatchProcessorWithReport, get_aliases
+import rich
+
 from datastation.dataverse.dataverse_api import DataverseApi
 from datastation.dataverse.dataverse_client import DataverseClient
 
@@ -13,7 +13,7 @@ class DataverseRole:
         self.dry_run = dry_run
 
     def list_role_assignments(self, alias):
-        r = self.dataverse_client.dataverse(alias).get_role_assignments()
+        r = self.dataverse_client.dataverse(alias).get_role_assignments(self.dry_run)
         if r is not None:
             rich.print_json(data=r)
 
@@ -32,7 +32,8 @@ class DataverseRole:
             {'alias': dataverse_api.get_alias(), 'Modified': datetime.now(), 'Assignee': assignee, 'Role': role,
              'Change': action})
 
-    def in_current_assignments(self, assignee, role, dataverse_api: DataverseApi):
+    @staticmethod
+    def in_current_assignments(assignee, role, dataverse_api: DataverseApi):
         current_assignments = dataverse_api.get_role_assignments()
         found = False
         for current_assignment in current_assignments:
@@ -41,7 +42,6 @@ class DataverseRole:
                 found = True
                 break
         return found
-
 
     def remove_role_assignment(self, role_assignment, dataverse_api: DataverseApi, csv_report):
         assignee = role_assignment.split('=')[0]

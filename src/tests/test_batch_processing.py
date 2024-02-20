@@ -15,6 +15,26 @@ class TestBatchProcessor:
         captured = capsys.readouterr()
         assert captured.out == "1\n2\n3\n"
 
+    def test_process_objects_with_pids(self, capsys):
+        batch_processor = BatchProcessor()
+        objects = [{"PID": "1", "param": "value1"},
+                   {"PID": "2", "param": "value2"},
+                   {"PID": "1", "param": "value3"}]
+        batch_processor.process_pids(objects, lambda obj: print(obj))
+        captured = capsys.readouterr()
+        assert captured.out == ("{'PID': '1', 'param': 'value1'}\n"
+                                "{'PID': '2', 'param': 'value2'}\n"
+                                "{'PID': '1', 'param': 'value3'}\n")
+
+    def test_process_objects_without_pids(self, capsys):
+        batch_processor = BatchProcessor()
+        objects = [{"no-pid": "1", "param": "value1"},
+                   {"no-pid": "2", "param": "value2"},
+                   {"no-pid": "1", "param": "value3"}]
+        batch_processor.process_pids(objects, lambda obj: print(obj['param']))
+        captured = capsys.readouterr()
+        assert captured.out == ("value1\nvalue2\nvalue3\n")
+
     def test_process_pids_with_wait_on_iterator(self, capsys):
         batch_processor = BatchProcessor(wait=0.1)
 

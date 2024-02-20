@@ -2,7 +2,7 @@ import requests
 import json
 
 
-from datastation.common.utils import print_dry_run_message
+from datastation.common.utils import print_dry_run_message, raise_for_status_after_log
 
 
 class DataverseApi:
@@ -24,7 +24,7 @@ class DataverseApi:
             return None
 
         dv_resp = requests.get(url, headers=headers)
-        dv_resp.raise_for_status()
+        raise_for_status_after_log(dv_resp)
 
         resp_data = dv_resp.json()["data"]
         return resp_data
@@ -50,7 +50,7 @@ class DataverseApi:
             return None
         else:
             r = requests.get(url, headers=headers)
-        r.raise_for_status()
+        raise_for_status_after_log(r)()
         return r.json()['data']['message']
 
     def add_role_assignment(self, assignee, role, dry_run=False):
@@ -63,7 +63,7 @@ class DataverseApi:
             return None
         else:
             r = requests.post(url, headers=headers, json=role_assignment)
-            r.raise_for_status()
+            raise_for_status_after_log(r)
             return r
 
     def remove_role_assignment(self, assignment_id, dry_run=False):
@@ -74,5 +74,5 @@ class DataverseApi:
             return None
         else:
             r = requests.delete(url, headers=headers)
-        r.raise_for_status()
+        raise_for_status_after_log(r)
         return r

@@ -1,6 +1,6 @@
 import argparse
 
-from datastation.common.common_batch_processing import get_aliases, DataverseBatchProcessorWithReport
+from datastation.common.batch_processing import get_entries, BatchProcessorWithReport
 from datastation.common.config import init
 from datastation.common.utils import add_batch_processor_args, add_dry_run_arg
 from datastation.dataverse.dataverse_client import DataverseClient
@@ -13,8 +13,8 @@ def list_role_assignments(args, dataverse_client: DataverseClient):
 
 def add_role_assignments(args, dataverse_client: DataverseClient):
     role_assignment = DataverseRole(dataverse_client, args.dry_run)
-    aliases = get_aliases(args.alias_or_alias_file)
-    create_batch_processor(args).process_aliases(
+    aliases = get_entries(args.alias_or_alias_file)
+    create_batch_processor(args).process_entries(
         aliases,
         lambda alias,
                csv_report: role_assignment.add_role_assignment(args.role_assignment,
@@ -25,8 +25,8 @@ def add_role_assignments(args, dataverse_client: DataverseClient):
 
 def remove_role_assignments(args, dataverse_client: DataverseClient):
     role_assignment = DataverseRole(dataverse_client, args.dry_run)
-    aliases = get_aliases(args.alias_or_alias_file)
-    create_batch_processor(args).process_aliases(
+    aliases = get_entries(args.alias_or_alias_file)
+    create_batch_processor(args).process_entries(
         aliases,
         lambda alias,
                csv_report: role_assignment.remove_role_assignment(args.role_assignment,
@@ -36,7 +36,7 @@ def remove_role_assignments(args, dataverse_client: DataverseClient):
 
 
 def create_batch_processor(args):
-    return DataverseBatchProcessorWithReport(
+    return BatchProcessorWithReport(
         wait=args.wait,
         fail_on_first_error=args.fail_fast,
         report_file=args.report_file,

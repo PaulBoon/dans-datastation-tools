@@ -1,7 +1,7 @@
 import argparse
 import json
 
-from datastation.common.batch_processing import get_pids, BatchProcessor, BatchProcessorWithReport
+from datastation.common.batch_processing import get_entries, BatchProcessor
 from datastation.common.config import init
 from datastation.common.utils import add_batch_processor_args, add_dry_run_arg
 from datastation.dataverse.datasets import Datasets
@@ -14,9 +14,9 @@ def main():
 
     attr_group = parser.add_argument_group()
     attr_group.add_argument("--user-with-role", dest="user_with_role",
-                        help="List users with a specific role on the dataset",)
+                            help="List users with a specific role on the dataset",)
     attr_group.add_argument("--storage", dest="storage", action="store_true",
-                        help="The storage in bytes",)
+                            help="The storage in bytes",)
 
     group = parser.add_mutually_exclusive_group(required=True)
 
@@ -40,8 +40,13 @@ def main():
     dataverse_client = DataverseClient(config["dataverse"])
 
     datasets = Datasets(dataverse_client, dry_run=args.dry_run)
-    BatchProcessor(wait=args.wait, fail_on_first_error=args.fail_fast).process_pids(
-        get_pids(args.pid_or_pids_file, dataverse_client.search_api(), dry_run=args.dry_run),
+    if args.all_datasets:
+        search_result = dataverse_client.search_api().search(dry_run=args.dry_run)
+        pids = map(lambda rec: rec['global_id'], search_result)  # lazy iterator
+    else:
+        pids = get_entries(args.pid_or_pids_file)
+    BatchProcessor(wait=args.wait, fail_on_first_error=args.fail_fast).process_entries(
+        pids,
         lambda pid: print(json.dumps(datasets.get_dataset_attributes(pid, **attribute_options), skipkeys=True)))
 
 

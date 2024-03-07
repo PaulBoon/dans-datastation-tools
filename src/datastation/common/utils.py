@@ -5,6 +5,7 @@ import shutil
 import argparse
 import requests
 
+
 def add_dry_run_arg(parser):
     parser.add_argument('-d', '--dry-run', action='store_true',
                         help='Do not perform the action, but show what would be done.')
@@ -117,6 +118,7 @@ def sizeof_fmt(num, suffix='B'):
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
+
 
 def plural(word: str):
     if word.endswith('s'):

@@ -55,8 +55,12 @@ def main():
         with open(args.pid_or_file, newline='') as csvfile:
             # restkey must be an invalid <typeName> to prevent it from being processed
             reader = DictReader(csvfile, skipinitialspace=True, restkey='rest.column')
-            if 'PID' not in reader.fieldnames:
-                parser.error(f"No column 'PID' found in " + args.pid_or_file)
+            if reader is None or reader.fieldnames is None or len(reader.fieldnames) == 0:
+                parser.error(f"{args.pid_or_file} is empty or not a CSV file.")
+                return
+            if 'PID' not in reader.fieldnames or len(reader.fieldnames) == 0:
+                parser.error(f"No column 'PID' (or no other columns) found in " + args.pid_or_file)
+                return
             run(reader)
     else:
         run([parse_value_args()])

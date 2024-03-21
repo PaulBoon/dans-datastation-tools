@@ -1,6 +1,6 @@
-import json
-
 import requests
+
+from datastation.common.utils import raise_for_status_after_log
 
 
 class MetricsApi:
@@ -14,5 +14,5 @@ class MetricsApi:
             print(f"Would have sent the following request: {url}")
             return
         r = requests.get(url)
-        r.raise_for_status()
+        raise_for_status_after_log(r)()
         return r.json()['data']

@@ -1,6 +1,6 @@
 import requests
 
-from datastation.common.utils import print_dry_run_message
+from datastation.common.utils import print_dry_run_message, raise_for_status_after_log
 
 
 class FileApi:
@@ -20,5 +20,5 @@ class FileApi:
             print_dry_run_message(method='POST', url=url, headers=headers, params=params)
             return None
         r = requests.post(url, headers=headers, params=params)
-        r.raise_for_status()
+        raise_for_status_after_log(r)()
         return r

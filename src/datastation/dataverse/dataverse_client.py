@@ -27,8 +27,8 @@ class DataverseClient:
     def dataset(self, pid):
         return DatasetApi(pid, self.server_url, self.api_token, self.unblock_key, self.safety_latch)
 
-    def dataverse(self):
-        return DataverseApi(self.server_url, self.api_token)
+    def dataverse(self, alias=None):
+        return DataverseApi(self.server_url, self.api_token, alias)
 
     def file(self, file_id):
         return FileApi(file_id, self.server_url, self.api_token, self.unblock_key, self.safety_latch)

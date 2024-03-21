@@ -28,8 +28,7 @@ def main():
     batch_processor.process_pids(pids,
                                  callback=lambda pid, csv_report: destroy_placeholder_dataset(dataverse.dataset(pid),
                                                                                               description_text_pattern,
-                                                                                              csv_report,
-                                                                                              dry_run=args.dry_run))
+                                                                                              csv_report))
 
 
 if __name__ == '__main__':

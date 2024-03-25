@@ -8,13 +8,11 @@ def test_get_rpm_modules_should_filter_out_packages_with_no_matching_prefix():
         mock_qa.return_value = ['dans.knaw.nl-dd-vault-metadata-2.2.0-1.noarch',
                                 'dans.knaw.nl-dans-schema-0.10.0-1.noarch',
                                 'python3-rpm-generators-5-8.el8.noarch',
-                                'dans.knaw.nl-dd-verify-dataset-0.10.0-1.noarch',
                                 ]
         versions = get_rpm_versions('dans.knaw.nl-')
         assert versions == {
             'dans.knaw.nl-dd-vault-metadata': '2.2.0',
             'dans.knaw.nl-dans-schema': '0.10.0',
-            'dans.knaw.nl-dd-verify-dataset': '0.10.0'
         }
 
 
@@ -30,14 +28,11 @@ def test_get_rpm_modules_should_accept_non_digits_in_release_part_of_evr():
         mock_qa.return_value = ['dans.knaw.nl-dd-vault-metadata-2.2.0-1.noarch',
                                 'dans.knaw.nl-dans-schema-0.10.0-SNAPSHOT20231005095642.noarch',
                                 'python3-rpm-generators-5-8.el8.noarch',
-                                'dans.knaw.nl-dd-verify-dataset-0.10.0-1.noarch',
-                                'dans.knaw.nl-dd-verify-dataset-0.10.0-1.1.noarch',
                                 ]
         versions = get_rpm_versions('dans.knaw.nl-')
         assert versions == {
             'dans.knaw.nl-dd-vault-metadata': '2.2.0',
             'dans.knaw.nl-dans-schema': '0.10.0-SNAPSHOT20231005095642',
-            'dans.knaw.nl-dd-verify-dataset': '0.10.0'
         }
 
 

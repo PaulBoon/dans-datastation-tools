@@ -50,7 +50,7 @@ class DataverseApi:
             return None
         else:
             r = requests.get(url, headers=headers)
-        raise_for_status_after_log(r)()
+        raise_for_status_after_log(r)
         return r.json()['data']['message']
 
     def add_role_assignment(self, assignee, role, dry_run=False):

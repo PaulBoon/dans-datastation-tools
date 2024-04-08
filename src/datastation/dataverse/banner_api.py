@@ -20,7 +20,7 @@ class BannerApi:
             print(f"Would have sent the following request: {url}")
             return
         r = requests.get(url, headers=headers, params={'unblock-key': self.unblock_key})
-        raise_for_status_after_log(r)()
+        raise_for_status_after_log(r)
         return r
 
     def add(self, msg: str, dismissible_by_user: bool = False, lang: str = 'en', dry_run: bool = False):
@@ -41,7 +41,7 @@ class BannerApi:
             print(json.dumps(banner, indent=4))
             return
         r = requests.post(url, headers=headers, params={'unblock-key': self.unblock_key}, json=banner)
-        raise_for_status_after_log(r)()
+        raise_for_status_after_log(r)
         return r
 
     def remove(self, banner_id: int, dry_run: bool = False):
@@ -52,5 +52,5 @@ class BannerApi:
             print(f"Would have sent the following request: {url}")
             return
         r = requests.delete(url, headers=headers, params={'unblock-key': self.unblock_key})
-        raise_for_status_after_log(r)()
+        raise_for_status_after_log(r)
         return r

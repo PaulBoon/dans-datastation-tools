@@ -17,8 +17,8 @@ def get_config_version_info(config):
     else:
         default_version_info = {
             'dans_rpm_module_prefix': 'dans.knaw.nl-',
-            'dataverse_application_path': '/var/lib/payara5/glassfish/domains/domain1/applications/dataverse/',
-            'payara_install_path': '/usr/local/payara5'
+            'dataverse_application_path': '/var/lib/payara6/glassfish/domains/domain1/applications/dataverse/',
+            'payara_install_path': '/usr/local/payara6'
         }
         rich.print('WARNING: No version_info section in config file. Using default values.')
         rich.print('To get rid of this warning, add a version_info section to your config file:')

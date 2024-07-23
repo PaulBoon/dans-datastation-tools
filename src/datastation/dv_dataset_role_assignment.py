@@ -105,7 +105,7 @@ def main():
 
     # Remove role assignment
     parser_remove = subparsers.add_parser('remove', help='remove role assignment from specified dataset(s)')
-    parser_remove.add_argument('role-assignment',
+    parser_remove.add_argument('role_assignment',
                                help='role assignee and alias (example: @dataverseAdmin=contributor)')
     parser_remove.add_argument('pid_or_pid_file', help='The dataset pid or the input file with the dataset pids')
     add_batch_processor_args(parser_remove)

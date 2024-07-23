@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Development - dans-datastation-tools</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Development";
+        var mkdocs_page_input_path = "dev.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> dans-datastation-tools
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Manual</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Development</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#setting-up-the-development-environment">Setting up the development environment</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#poetry-initialization">Poetry initialization</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#testing-commands-with-poetry">Testing commands with poetry</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#debugging-commands-in-pycharm">Debugging commands in PyCharm</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#adding-to-this-documentation-site">Adding to this documentation site</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#user-interface">User interface</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#command-names">Command names</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#command-line-parameters">Command line parameters</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#output">Output</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#implementation">Implementation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#commands-and-entry-point-scripts">Commands and entry-point scripts</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#code-style">Code style</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#code-formatting">Code formatting</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#unit-tests">Unit tests</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#string-interpolation">String interpolation</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../arch/">⇒ DANS Data Station Architecture</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">dans-datastation-tools</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Development</li>
+    <li class="wy-breadcrumbs-aside">
+        <a href="https://github.com/DANS-KNAW/dans-datastation-tools/edit/master/docs/dev.md"> Edit on DANS-KNAW/dans-datastation-tools</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="development">Development<a class="headerlink" href="#development" title="Permanent link">&para;</a></h1>
+<p>This page contains information for developers about how to contribute to this project.</p>
+<h2 id="setting-up-the-development-environment">Setting up the development environment<a class="headerlink" href="#setting-up-the-development-environment" title="Permanent link">&para;</a></h2>
+<h3 id="poetry-initialization">Poetry initialization<a class="headerlink" href="#poetry-initialization" title="Permanent link">&para;</a></h3>
+<p>The project uses <a href="https://python-poetry.org/docs/" target="_blank">poetry</a> for a build system. If you don't have it installed yet, install poetry for
+your
+user with:</p>
+<pre><code class="language-bash">python3 -m pip install --user poetry
+</code></pre>
+<p>After <code>poetry</code> is installed, change directory to the project root and execute:</p>
+<pre><code class="language-bash">poetry install
+</code></pre>
+<p>This will install the project and its dependencies in the poetry virtual environment for the project.</p>
+<h3 id="testing-commands-with-poetry">Testing commands with poetry<a class="headerlink" href="#testing-commands-with-poetry" title="Permanent link">&para;</a></h3>
+<p>After <code>poetry install</code> the commands provided by the module can be tested by prepending <code>poetry run</code> to the command line,
+e.g.:</p>
+<pre><code class="language-bash">poetry run dv-banner list
+</code></pre>
+<p>The mapping from command to the function that implements it is defined in <code>pyproject.toml</code>, in the <code>tool.poetry.scripts</code>
+section.</p>
+<p>For more information about how to use poetry, see the <a href="https://python-poetry.org/docs/" target="_blank">poetry</a> documentation.</p>
+<h3 id="debugging-commands-in-pycharm">Debugging commands in PyCharm<a class="headerlink" href="#debugging-commands-in-pycharm" title="Permanent link">&para;</a></h3>
+<p>Poetry provides no support for debugging. To debug a command in PyCharm, create a new run configuration by
+right-clicking on the corresponding entry-point script and selecting "Modify Run Configuration". In the dialog that
+appears, you can specify the command line parameters. After saving the configuration you can start it by clicking the
+green arrow or bug icon in the toolbar. (This should all be familiar to you if you have used an IDE before, but it is
+different from the way we work in Java projects, where the program is started with the scripts in <code>dans-dev-tools</code> and
+you then attach a debugger.)</p>
+<div class="admonition attention">
+<p class="admonition-title">Working directory</p>
+<p>By default PyCharm will use the directory of the entry-point script as the working directory. This means that 
+configuration file (<code>.dans-datastation-tools.yml</code>) in the root of the project will not be found. Instead, a 
+new configuration file will be created in the directory of the entry-point script. This may be confusing if you are 
+not aware of it, because <code>poetry</code> will still use the configuration file in the root of the project. To avoid this, 
+you can change the working directory in the run configuration to the root of the project.</p>
+</div>
+<h3 id="adding-to-this-documentation-site">Adding to this documentation site<a class="headerlink" href="#adding-to-this-documentation-site" title="Permanent link">&para;</a></h3>
+<p>On occasion, you may want to add to this documentation site. It is important to test that your changes look good before
+you commit them. To do this, you can use the <code>start-mkdocs.sh</code> script in the <code>dans-dev-tools</code> project.
+(See <a href="https://github.com/DANS-KNAW/dans-dev-tools#startsh-scripts" target="_blank">dans-dev-tools</a>: <code>start-mkdocs.sh</code>.)</p>
+<pre><code class="language-bash">start-mkdocs.sh
+</code></pre>
+<p>Edit the files in <code>docs</code> and browse to or refresh <a href="http://127.0.0.1:8080" target="_blank">http://127.0.0.1:8080</a> to view your changes.</p>
+<p>Note that here we are using a separate virtual environment. This way we don't get the dependencies
+for <code>dans-datastation-tools</code> and the doc site confused.</p>
+<h2 id="user-interface">User interface<a class="headerlink" href="#user-interface" title="Permanent link">&para;</a></h2>
+<p>The user interface of dans-datastation-tools consists of a set of commands that can be executed from the command line.
+In order to make the user interface consistent, the following guidelines should be followed.</p>
+<h3 id="command-names">Command names<a class="headerlink" href="#command-names" title="Permanent link">&para;</a></h3>
+<p>Commands target a specific object type, e.g. a dataset, a file, and perform an action on that object, e.g. create, read,
+etc. The general pattern for a command name is:</p>
+<pre><code class="language-bash">&lt;object-type&gt;-&lt;action&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-bash">dv-dataset-publish # object-type: dv-dataset, action: publish
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Subcommands</p>
+<p>In some cases the action is a subcommand. This is an inconsistency at the moment. We may want to change this in the
+future, either by making all actions subcommands or by making all actions regular commands.  </p>
+</div>
+<p>The following object types are currently supported: <code>dans-bag</code>, <code>dv-dataset</code>, <code>dv-user</code>, <code>dv-banner</code>, <code>ingest-flow</code>.
+This list may be extended in the future.</p>
+<h3 id="command-line-parameters">Command line parameters<a class="headerlink" href="#command-line-parameters" title="Permanent link">&para;</a></h3>
+<p>There are two types of parameters:</p>
+<ul>
+<li>Positional parameters</li>
+<li>Named parameters</li>
+</ul>
+<p>The input that identifies the object to perform the action on is always a positional parameter. This can for example be
+a dataset identifier, a file path, etc., or file containing a list of such identifiers to be processed in batch mode.</p>
+<p>Named parameters are used to modify the action or provide additional input. They can be optional or required.</p>
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Output that is not too long should be sent to the standard output.</li>
+<li>Commands that are likely to produce longer output, a named parameter <code>--output-file</code> should be included, with the
+  default value <code>-</code> (meaning the standard output).</li>
+<li>When batch-processing a list of objects, it is often useful to have a report of the results. This can be done with the
+  <code>--report-file</code> parameter, with the default value <code>-</code> (meaning the standard output).</li>
+<li>Messages about the status of the program should be sent to the standard error, for example error messages, progress
+  messages, etc.</li>
+</ul>
+<h2 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h2>
+<h3 id="commands-and-entry-point-scripts">Commands and entry-point scripts<a class="headerlink" href="#commands-and-entry-point-scripts" title="Permanent link">&para;</a></h3>
+<p>Commands each have their own entry-point script in the root package <code>datastation</code>. They must all have a <code>main</code>
+function and a <code>__main__</code> section that calls that function. The latter is needed so that you can debug the command in
+PyCharm.</p>
+<p>The <code>main</code> function is mapped to the command name in <code>pyproject.toml</code>, in the <code>tool.poetry.scripts</code> section. The name of
+the entry-point script is the same as the command name, with <code>-</code> replaced by <code>_</code> and a <code>.py</code> extension added. For
+example, the <code>dv-dataset-publish</code> command is implemented (by the <code>main</code> function) in the <code>dv_dataset_publish.py</code> script.</p>
+<p>The entry-point scripts are not meant to be imported by other modules. Their only purpose is to provide a command-line
+interface and should do as little else as possible.</p>
+<h3 id="subpackages">Subpackages<a class="headerlink" href="#subpackages" title="Permanent link">&para;</a></h3>
+<p>Most commands talk to a remote service, e.g. a Dataverse server. The code that talks to the remote service is in a
+dedicated subpackage, e.g. <code>dataverse</code> for the Dataverse server. There is also a <code>common</code> subpackage that common
+functionality for all commands and utilities that are not specific to a remote service.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<p>There is one configuration file which is in YAML format and contains a section for each targeted service. The objects
+that need a specific section take a dictionary with only that section as a parameter, e.g.:</p>
+<pre><code class="language-python">from datastation.dataverse.dataverse_client import DataverseClient
+from datastation.common.config import init
+
+config = init()
+dataverse_client = DataverseClient(config['dataverse'])
+</code></pre>
+<p>Note that DataverseClient does not know about the other sections in the configuration file. On the other hand it does
+not receive each individual parameter as a separate argument either. This is to avoid having to transfer all the
+parameters to the constructor of the client. This style is intended to strike a balance between the two extremes.</p>
+<h3 id="code-style">Code style<a class="headerlink" href="#code-style" title="Permanent link">&para;</a></h3>
+<h4 id="code-formatting">Code formatting<a class="headerlink" href="#code-formatting" title="Permanent link">&para;</a></h4>
+<p>Format the code with PyCharm's code formatter.</p>
+<h4 id="unit-tests">Unit tests<a class="headerlink" href="#unit-tests" title="Permanent link">&para;</a></h4>
+<p>Unit tests should go under <code>src/tests</code>. The test files should be named <code>test_&lt;module&gt;.py</code> and the test classes should be
+named <code>Test&lt;Module/Class/Function&gt;</code>. There can be multiple test classes in a test file.</p>
+<h4 id="string-interpolation">String interpolation<a class="headerlink" href="#string-interpolation" title="Permanent link">&para;</a></h4>
+<p>Use the following syntax for string interpolation:</p>
+<pre><code class="language-python">name = &quot;John&quot;
+f&quot;Hello {name}&quot;
+</code></pre>
+<p>Do not use the old <code>%</code> syntax, or the <code>.format()</code> method or string concatenation. Also avoid concatenating strings with
+<code>+</code> or <code>+=</code>. Use string interpolation instead.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Manual"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../arch/" class="btn btn-neutral float-right" title="⇒ DANS Data Station Architecture">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../arch/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
